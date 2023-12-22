@@ -214,7 +214,7 @@ class DataListView extends StatelessWidget {
                                 trailing: dataItems[index].onTap == null
                                     ? null
                                     : InkWell(
-                                        onDoubleTap: () =>
+                                        onTap: () =>
                                             dataItems[index].onTap!.call(),
                                         child: Icon(
                                           Icons.navigate_next,
@@ -299,7 +299,7 @@ class DataListView extends StatelessWidget {
                                 trailing: dataItems[index].onTap == null
                                     ? null
                                     : InkWell(
-                                        onDoubleTap: () =>
+                                        onTap: () =>
                                             dataItems[index].onTap!.call(),
                                         child: const Icon(Icons.navigate_next),
                                       ),
