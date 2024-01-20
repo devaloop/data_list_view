@@ -3,10 +3,11 @@ library devaloop_data_list_view;
 import 'package:flutter/material.dart';
 
 class DataListView extends StatelessWidget {
+  //TODO Pagination & Perlu Label Info Berupa: Show 5 of 10 data at page 1 of 2 pages.
   const DataListView({
     super.key,
     required this.title,
-    required this.dataItems,
+    required this.dataSource,
     this.actions,
     this.summaries,
     this.actionColor,
@@ -15,7 +16,7 @@ class DataListView extends StatelessWidget {
   final String title;
   final List<ActionButton>? actions;
   final List<Summary>? summaries;
-  final List<DataItem> dataItems;
+  final DataSource dataSource;
   final Color? actionColor;
 
   @override
@@ -202,34 +203,37 @@ class DataListView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Show top ${dataItems.length}'),
+                        Text(
+                            'Show ${dataSource.dataItems.length} of ${dataSource.totalData} data at page 1 of 2 pages'),
                         Flexible(
                           child: ListView.separated(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Text(dataItems[index].title),
-                                subtitle: dataItems[index].subtitle,
-                                trailing: dataItems[index].onTap == null
-                                    ? null
-                                    : InkWell(
-                                        onTap: () =>
-                                            dataItems[index].onTap!.call(),
-                                        child: Icon(
-                                          Icons.navigate_next,
-                                          color: actionColor ??
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                        ),
-                                      ),
+                                title: Text(dataSource.dataItems[index].title),
+                                subtitle: dataSource.dataItems[index].subtitle,
+                                trailing:
+                                    dataSource.dataItems[index].onTap == null
+                                        ? null
+                                        : InkWell(
+                                            onTap: () => dataSource
+                                                .dataItems[index].onTap!
+                                                .call(),
+                                            child: Icon(
+                                              Icons.navigate_next,
+                                              color: actionColor ??
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                            ),
+                                          ),
                               );
                             },
                             separatorBuilder: (context, index) {
                               return const Divider();
                             },
-                            itemCount: dataItems.length,
+                            itemCount: dataSource.dataItems.length,
                           ),
                         ),
                       ],
@@ -287,20 +291,23 @@ class DataListView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Show top ${dataItems.length}'),
+                        Text(
+                            'Show ${dataSource.dataItems.length} of ${dataSource.totalData} data at page 1 of 2 pages'),
                         Flexible(
                           child: ListView.separated(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Text(dataItems[index].title),
-                                subtitle: dataItems[index].subtitle,
-                                trailing: dataItems[index].onTap == null
+                                title: Text(dataSource.dataItems[index].title),
+                                subtitle: dataSource.dataItems[index].subtitle,
+                                trailing: dataSource.dataItems[index].onTap ==
+                                        null
                                     ? null
                                     : InkWell(
-                                        onTap: () =>
-                                            dataItems[index].onTap!.call(),
+                                        onTap: () => dataSource
+                                            .dataItems[index].onTap!
+                                            .call(),
                                         child: const Icon(Icons.navigate_next),
                                       ),
                               );
@@ -308,7 +315,7 @@ class DataListView extends StatelessWidget {
                             separatorBuilder: (context, index) {
                               return const Divider();
                             },
-                            itemCount: dataItems.length,
+                            itemCount: dataSource.dataItems.length,
                           ),
                         ),
                       ],
@@ -354,4 +361,18 @@ class DataItem {
   final String title;
   final Widget? subtitle;
   final Function()? onTap;
+}
+
+class DataSource {
+  final List<String> dataHeader;
+  final int totalData;
+  final List<DataItem> dataItems;
+  final Function(int)? onPagingClick; //TODO implement paging function
+
+  DataSource({
+    required this.dataItems,
+    required this.totalData,
+    required this.dataHeader,
+    this.onPagingClick,
+  });
 }
